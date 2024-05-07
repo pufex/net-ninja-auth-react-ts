@@ -1,0 +1,45 @@
+.account-modal{
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--element-color-1);
+    border-radius: 7px;
+    box-shadow: 0 0 8px var(--outline-color-1);
+    border: 1px solid var(--outline-color-1);
+    padding: 1rem;
+    animation: sizeIn 300ms linear 0ms forwards;
+}
+
+.account__header{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.account__heading{
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-color-1);
+}
+
+.account-details{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.account-details__paragraph{
+    width: 100%;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color-1);
+}

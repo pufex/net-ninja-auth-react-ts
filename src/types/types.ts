@@ -1,0 +1,1 @@
+export type FetchStatuses = "loading" | "error" | "success" 

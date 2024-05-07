@@ -1,0 +1,27 @@
+.close-modal__container{
+    height: 3rem;
+    aspect-ratio: 1;
+    position: absolute;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.close-modal__icon{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(210, 0, 0);
+}
+
+.close-modal__container:hover
+.close-modal__icon{
+    filter: brightness(1.1);
+}
+
+.close-modal__container:active
+.close-modal__icon{
+    filter: brightness(1.25);
+}

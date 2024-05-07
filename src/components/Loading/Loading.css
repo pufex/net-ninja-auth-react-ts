@@ -1,0 +1,82 @@
+.loading__wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.loading__title{
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-color-1);
+    text-shadow: 0 0 1px var(--text-color-1);
+}
+
+.loading__loading-bars{
+    display: flex;
+    align-items: end;
+    gap: 0.25rem;
+    height: 6rem;
+    padding-inline: 1rem;
+    box-shadow: 0 18px 10px -18px var(--outline-color-1);
+    border-bottom: 1px solid var(--outline-color-1);
+}
+
+.loading__loading-bar{
+    height: 100%;
+    width: 2rem;
+    background-color: black;
+    transform-origin: left bottom;
+    animation-duration: 2000ms;
+    animation-timing-function: cubic-bezier(.72,.17,.38,.93);
+    animation-name: bouncing;
+    animation-iteration-count: infinite;
+}
+
+@keyframes bouncing {
+    0%{
+        transform: scaleY(1);
+    }
+    50%{
+        transform: scaleY(0);
+    }
+    100%{
+        transform: scaleY(1);
+    }
+}
+
+.loading__loading-bar--1{
+    background-color: rgb(204, 0, 0);
+    border: 1px solid rgba(73, 0, 0, 0.3);
+    animation-delay: 0ms;
+}
+
+.loading__loading-bar--2{
+    background-color: rgb(253, 89, 0);
+    border: 1px solid rgba(82, 29, 0, 0.395);
+    animation-delay: 250ms;
+}
+
+.loading__loading-bar--3{
+    background-color: rgb(248, 174, 0);
+    border: 1px solid rgba(78, 54, 0, 0.264);
+    animation-delay: 500ms;
+}
+
+.loading__loading-bar--4{
+    background-color: rgb(0, 192, 0);
+    border: 1px solid rgba(0, 79, 0, 0.391);
+    animation-delay: 750ms;
+}
+
+.loading__loading-bar--5{
+    background-color: rgb(0, 16, 195);
+    border: 1px solid rgba(0, 6, 67, 0.29);
+    animation-delay: 1000ms;
+}
+
+.loading__loading-bar--6{
+    background-color: rgb(91, 0, 144);
+    border: 1px solid rgb(57, 0, 90);
+    animation-delay: 1250ms;
+}

@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  font-size: 16px;
+  font-family: "Titillium Web", sans-serif;
+  box-sizing: border-box;
+}
+
+body, html, #root{
+  width: 100%;
+  min-height: 100vh;
+}
+
+body.light{
+  --background-color: rgb(235, 235, 235);
+  --outline-color-1: rgba(28, 28, 28, 0.529);
+  --text-color-1: black;
+  --text-color-2: white;
+  --element-color-1: white;
+  --element-color-2: rgb(255, 153, 0); 
+  --element-color-3: rgb(177, 47, 0); 
+  --error-color: rgb(181, 0, 36);
+}
+
+body{
+  background-color: var(--background-color);
+}
+
+.btn{
+  appearance: none;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.input-container,
+.submit-container{
+  width: 100%;
+}
+
+.submit-container{
+  margin-top: 2rem;
+}
+
+.modal__window{
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 999;
+}
+
+.modal__shadow{
+  content: "";
+  background-color: rgba(0, 0, 0, 0.73);
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+@keyframes sizeIn {
+  from{
+      transform: scale(0);
+  }to{
+      transform: scale(1);
+  }
+}

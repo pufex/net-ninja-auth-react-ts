@@ -1,0 +1,12 @@
+.loading-icon__container{
+    position: relative;
+    height: 2rem;
+    aspect-ratio: 1;
+}
+
+.loading-icon-itself{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

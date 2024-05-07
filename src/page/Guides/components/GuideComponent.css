@@ -1,0 +1,7 @@
+.guide-component__content{
+    width: 100%;
+    padding: 2rem;
+    font-size: 1.1rem;
+    font-size: 500;
+    color: var(--text-color-1);
+}
