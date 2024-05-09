@@ -48,7 +48,7 @@ const Login = () => {
             closeModal();
         }catch(error){
             console.error(error)
-            setError("Failed to log in")
+            setError("Failed to log in.")
         }
         setLoading(false)
     }
@@ -97,7 +97,7 @@ const Login = () => {
                         loading={loading}
                         disabled={loading}
                     >
-                        SIGN UP
+                        Log In
                     </Button>
                 </div>
             </Form>

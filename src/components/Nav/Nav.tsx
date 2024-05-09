@@ -32,7 +32,7 @@ const Nav = () => {
             console.error(error)
             setError(true);
         }
-        setLoading(true)
+        setLoading(false)
     }
 
     const {openModal} = useModals()
@@ -102,6 +102,15 @@ const Nav = () => {
                             >
                                 Logout
                             </button>
+                            {
+                                currentUser.isAdmin 
+                                    && <button
+                                        className="nav__button"
+                                        onClick={() => openModal("create-guide")}
+                                    >
+                                        Create Guide
+                                    </button>
+                            }
                         </>
                 }
             </section>

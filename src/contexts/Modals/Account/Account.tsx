@@ -9,7 +9,7 @@ import "./Account.css"
 const Account = () => {
 
     const {closeModal} = useModals();
-    const {currentDocument} = useDatabase();
+    const {currentUser, currentDocument} = useDatabase();
 
     useEffect(() => {
         if(!currentDocument)
@@ -32,6 +32,13 @@ const Account = () => {
                 <p className="account-details__paragraph">
                     {currentDocument?.bio}
                 </p>
+                {
+                    // @ts-expect-error: ?????
+                    currentUser.isAdmin 
+                        && <p className="account-details__paragraph--role">
+                            Admin Acount
+                        </p>
+                }
             </section>
         </article>
     </div>

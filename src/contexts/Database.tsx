@@ -9,10 +9,12 @@ import {
     db,
     guides,
     auth,
+    functions,
     users
 } from "../firebase/firebase"
-import { doc, getDoc, getDocs, query, setDoc } from "firebase/firestore"
+import { addDoc, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
+import { httpsCallable } from "firebase/functions"
 
 export type Guide = {
     title: string,
@@ -24,7 +26,10 @@ export type UserDocument = {
     bio: string,
 }
 
-export type GetAllGuidesFunction = () => Promise<unknown>
+export type CreateGuideFunction = (
+    title: string,
+    content: string,
+) => Promise<unknown>
 
 export type RegisterFunction = (
     email: string,
@@ -36,15 +41,19 @@ export type LoginFunction = (
     password: string,
 ) => Promise<UserCredential>
 
+export type MakeAnAdminFunction = (email: string) => Promise<unknown>
+
 export type LogoutFunction = () => Promise<void>
 
 type DatabaseContextType = {
-    currentUser: User | undefined,
+    guides: Guide[],
+    currentUser: (User & {isAdmin: boolean}) | undefined,
     currentDocument: UserDocument | undefined,
-    getAllGuides: GetAllGuidesFunction,
+    createNewGuide: CreateGuideFunction,
     register: RegisterFunction,
     login: LoginFunction,
     logout: LogoutFunction,
+    makeAnAdmin: MakeAnAdminFunction,
 }
 
 const DatabaseContext = createContext<DatabaseContextType | null>(null)
@@ -63,15 +72,62 @@ const DatabaseProvider = ({
     children,
 }: DatabaseProviderProps) => {
 
-    const [loading, setLoading] = useState<boolean>(true);
-    const [currentUser, setCurrentUser] = useState<User | undefined>();
+    const [loadingUser, setLoadingUser] = useState<boolean>(true);
+    const [currentUser, setCurrentUser] = useState<(User & {isAdmin: boolean}) | undefined>();
     const [currentDocument, setCurrentDocument] = useState<UserDocument | undefined>()
+    
+    const [loadingGuides, setLoadingGuides] = useState<boolean>(true);
+    const [guidesArr, setGuidesArr] = useState<Guide[]>([])
+
+    // Add admin cloud function 
+
+    const addAdminRole = httpsCallable(functions, "addAdminRole")
+
+    const makeAnAdmin: MakeAnAdminFunction = (email) => {
+        return addAdminRole({email});
+    }
+
+    useEffect(() => {
+        const unsub = onSnapshot(guides, (snapshot) => {
+            setLoadingGuides(true)
+            if(snapshot){
+                const arr: Guide[] = []
+                snapshot.docs.forEach((doc) => {
+                    // @ts-expect-error: bs
+                    arr.push(doc.data());
+                })
+                setGuidesArr(arr);
+            }else setGuidesArr([]);
+            setLoadingGuides(false);
+        }, (err) => {
+            console.error(err)
+        })
+        return unsub
+    }, [])
+
+    const createNewGuide: CreateGuideFunction = (title, content) => {
+        return addDoc(guides, {
+            title,
+            content,
+        })
+    }
+
+    useEffect(() => {
+        console.log(currentUser)
+    }, [currentUser])
 
     useEffect(() => {
         const unsub = auth.onAuthStateChanged((user) => {
-            setLoading(true)
+            setLoadingUser(true)
             if(user){
-                setCurrentUser(user)
+                user.getIdTokenResult()
+                    .then((idTokenResult) => {
+                        // @ts-expect-error
+                        setCurrentUser({...user, isAdmin: idTokenResult.claims.isAdmin})
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                    })
                 
                 const userRef = doc(users, user.uid)
                 getDoc(userRef)
@@ -87,19 +143,12 @@ const DatabaseProvider = ({
                 setCurrentUser(undefined);
                 setCurrentDocument(undefined)
             }
-            setLoading(false)
+            setLoadingUser(false)
+        }, (err) => {
+            console.error(err);
         })
         return unsub
     }, [])
-    
-    useEffect(() => {
-        console.log(currentUser)
-    }, [currentUser])
-
-    const getAllGuides = () => {
-        const guidesQuery = query(guides)
-        return getDocs(guidesQuery)
-    }
 
     const register: RegisterFunction = async (email, password, bio) => {
         try{
@@ -123,18 +172,20 @@ const DatabaseProvider = ({
     }
 
     const value: DatabaseContextType = {
+        guides: guidesArr,
         currentUser,
         currentDocument,
-        getAllGuides,
+        createNewGuide,
         register,
         login,
         logout,
+        makeAnAdmin,
     }
 
     return <DatabaseContext.Provider
         value={value}
     >
-        {loading ? <LoadingPage /> : children}
+        {loadingUser || loadingGuides ? <LoadingPage /> : children}
     </DatabaseContext.Provider>  
 }
 

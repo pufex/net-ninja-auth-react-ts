@@ -10,7 +10,7 @@
     width: 100%;
     max-width: 1440px;
     margin-inline: auto;
-    padding: 0.25rem 1rem;
+    padding-inline: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -31,10 +31,10 @@
 }
 
 .nav--right{
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: end;
-    gap: 1rem;
 }
 
 .nav__button{
@@ -44,6 +44,17 @@
     text-decoration: none;
     border: none;
     outline: none;
-    background-color: transparent;
+    background-color: var(--background-color);
     cursor: pointer;
+    height: 100%;
+    padding-inline: 1rem;
 }
+
+.nav__button:hover{
+    filter: brightness(0.96);
+}
+
+.nav__button:active{
+    filter: brightness(0.95);
+}
+

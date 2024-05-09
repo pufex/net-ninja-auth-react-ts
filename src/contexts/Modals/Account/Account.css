@@ -43,3 +43,8 @@
     font-weight: 500;
     color: var(--text-color-1);
 }
+
+.account-details__paragraph--role{
+    font-weight: 700;
+    color: red;
+}

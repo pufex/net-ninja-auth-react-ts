@@ -1,56 +1,84 @@
-import type { Guide } from "../../contexts/Database";
-import type { FetchStatuses } from "../../types/types";
+import type { FormEvent } from "react";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDatabase } from "../../contexts/Database"
-
-import ErrorPage from "../ErrorPage/ErrorPage";
-import LoadingPage from "../LoadingPage/LoadingPage";
+import { useInput } from "../../hooks/useInput/hooks/useInput/useInput";
 
 import GuideComponent from "./components/GuideComponent";
+import Form from "../../components/Form/Form";
+import Input from "../../components/Input/Input";
+import Button from "../../components/Button/Button";
+
+import { validateEmail } from "../../utils/validations";
 
 import "./Guides.css"
 
 const Guides = () => {
 
     const {
+        guides,
         currentUser,
-        getAllGuides,
+        makeAnAdmin,
     } = useDatabase();
+  
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<boolean | string>(false);
 
-    const [guides, setGuides] = useState<Guide[]>([])
-    const [guidesFetchStatus, setGuidesFetchStatus] = useState<FetchStatuses>("loading");
+    const [adminEmail, handleAdminChange, setAdminError] = useInput({})
 
-    const fetchGuides = async () => {
-        setGuidesFetchStatus("loading")
-        getAllGuides()
-            .then((snapshot) => {
-                const guides: Guide[] = [];
-                // @ts-expect-error: Won't let me import the promise's generics for this function.
-                snapshot?.docs?.forEach?.((doc) => {  
-                    guides.push({...doc.data(), id: doc.id})
-                })
-                setGuides(guides)
-                setGuidesFetchStatus("success")
-            })
-            .catch((error) => {
-                console.error(error);
-                setGuidesFetchStatus("error");
-            })
+    const handleAddAdmin = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setError(false)
+        setAdminError();
+
+        if(validateEmail(adminEmail.value))
+            return setAdminError(true, "Invalid Email")
+        
+        try{
+            setLoading(true)
+            const result = await makeAnAdmin(adminEmail.value)
+            console.log(result)
+        }catch(error){
+            console.error(error)
+            setError("Failed to make an admin.")
+        }
+        
+        setLoading(false)
     }
 
-    useEffect(() => {
-        fetchGuides()
-    }, [])
-
-    if(guidesFetchStatus == "loading")
-    return <LoadingPage />
-
-    else if(guidesFetchStatus == "error")
-    return <ErrorPage />
-
-    else if(currentUser)
+    if(currentUser)
     return <main className="guides-page__main">
+        {
+            currentUser.isAdmin 
+                && <section className="make-admin__form">
+                    <Form
+                        onSubmit={handleAddAdmin}
+                        isError={typeof error == "string"} 
+                        errorMessage={typeof error == "string" ? error : undefined}
+                    >   
+                        <div className="input-container">
+                            <Input
+                                value={adminEmail.value}
+                                isError={adminEmail.isError}
+                                errorMessage={adminEmail.errorMessage}
+                                onChange={handleAdminChange}
+                            >
+                                Email
+                            </Input>
+                        </div>
+                        <div className="submit-container-2">
+                            <Button
+                                role="submit"
+                                type="primary"
+                                loading={loading}
+                                disabled={loading}
+                            >
+                                Make an admin
+                            </Button>
+                        </div>
+                    </Form>
+                </section>
+        }
         <section className="guides-page__guides">
             {
                 guides?.map(({

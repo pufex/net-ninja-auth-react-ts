@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom"
 import Register from "./Register/Register"
 import Login from "./Login/Login"
 import Account from "./Account/Account"
+import CreateGuide from "./CreateGuide/CreateGuide"
 
 export type OpenModalFunction = (
     modal: string,
@@ -46,6 +47,8 @@ const ModalsProvider = ({
                 return <Login />
             case "account":
                 return <Account />
+            case "create-guide":
+                return <CreateGuide />
             default:
                 return null
         }
